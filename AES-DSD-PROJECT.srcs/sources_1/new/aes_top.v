@@ -126,13 +126,13 @@ module aes_top (
     end
 
     // -------------------------------------------------------------------------
-    // Output: latch ciphertext when done fires
+    // Output: latch ciphertext at the end of the final round
     // -------------------------------------------------------------------------
     always @(posedge clk or posedge rst) begin
         if (rst)
             ciphertext <= 128'b0;
-        else if (done)
-            ciphertext <= state_reg;
+        else if (round_en && is_final_round)
+            ciphertext <= round_out;
     end
 
 endmodule
