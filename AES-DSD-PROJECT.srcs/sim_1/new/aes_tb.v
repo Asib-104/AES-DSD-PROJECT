@@ -25,6 +25,7 @@ module aes_tb;
     reg         clk;
     reg         rst;
     reg         start;
+    reg         decrypt;
     reg  [127:0] plaintext;
     reg  [127:0] cipher_key;
     wire [127:0] ciphertext;
@@ -37,6 +38,7 @@ module aes_tb;
         .clk        (clk),
         .rst        (rst),
         .start      (start),
+        .decrypt    (decrypt),
         .plaintext  (plaintext),
         .cipher_key (cipher_key),
         .ciphertext (ciphertext),
@@ -96,6 +98,7 @@ module aes_tb;
         // Initialise
         rst        = 1'b1;
         start      = 1'b0;
+        decrypt    = 1'b0;
         plaintext  = 128'b0;
         cipher_key = 128'b0;
         pass_count = 0;
@@ -146,6 +149,18 @@ module aes_tb;
             128'hbcbf217cb280cf30b2517052193ab979,
             4
         );
+
+        // -----------------------------------------------------------------
+        // Test 5: Decryption of Test 1 (FIPS 197 App B)
+        // -----------------------------------------------------------------
+        decrypt = 1'b1;
+        run_test(
+            128'h3925841d02dc09fbdc118597196a0b32, // Ciphertext from Test 1
+            128'h2b7e151628aed2a6abf7158809cf4f3c, // Key
+            128'h3243f6a8885a308d313198a2e0370734, // Expected resulting Plaintext
+            5
+        );
+        decrypt = 1'b0;
 
         // -----------------------------------------------------------------
         // Summary

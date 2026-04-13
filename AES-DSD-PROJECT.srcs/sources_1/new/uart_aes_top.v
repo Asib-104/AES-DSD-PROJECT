@@ -3,6 +3,7 @@
 module uart_aes_top (
     input        clk,
     input        rst,        // Active-high reset from button
+    input        decrypt_mode_switch, // Switch 0
     input        uart_rx,
     output       uart_tx,
     output [2:0] led         // Status LEDs
@@ -49,6 +50,7 @@ module uart_aes_top (
         .clk(clk),
         .rst(rst),
         .start(aes_start),
+        .decrypt(decrypt_mode_switch),
         .plaintext(plaintext),
         .cipher_key(cipher_key),
         .ciphertext(ciphertext),

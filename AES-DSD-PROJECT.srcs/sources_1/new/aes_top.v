@@ -25,6 +25,7 @@ module aes_top (
     input         clk,
     input         rst,
     input         start,
+    input         decrypt,
     input  [127:0] plaintext,
     input  [127:0] cipher_key,
     output reg [127:0] ciphertext,
@@ -71,11 +72,13 @@ module aes_top (
     );
 
     // -------------------------------------------------------------------------
-    // Round key MUX: select key indexed by round_counter
+    // Round key MUX: select key indexed by round_counter (or reversed if decrypting)
     // -------------------------------------------------------------------------
+    wire [3:0] key_index = decrypt ? (4'd10 - round_counter) : round_counter;
     reg [127:0] current_round_key;
+    
     always @(*) begin
-        case (round_counter)
+        case (key_index)
             4'd0:    current_round_key = rk0;
             4'd1:    current_round_key = rk1;
             4'd2:    current_round_key = rk2;
@@ -99,14 +102,23 @@ module aes_top (
     // -------------------------------------------------------------------------
     // AES round datapath (combinatorial): operates on current state_reg
     // -------------------------------------------------------------------------
-    wire [127:0] round_out;
-
+    wire [127:0] encrypt_round_out;
     aes_round round_inst (
         .state_in     (state_reg),
         .round_key    (current_round_key),
         .is_final_round(is_final_round),
-        .state_out    (round_out)
+        .state_out    (encrypt_round_out)
     );
+
+    wire [127:0] decrypt_round_out;
+    aes_inv_round inv_round_inst (
+        .state_in     (state_reg),
+        .round_key    (current_round_key),
+        .is_final_round(is_final_round),
+        .state_out    (decrypt_round_out)
+    );
+
+    wire [127:0] round_out = decrypt ? decrypt_round_out : encrypt_round_out;
 
     // -------------------------------------------------------------------------
     // State register update
@@ -119,7 +131,7 @@ module aes_top (
             state_reg <= 128'b0;
         end else begin
             if (init_round_en)
-                state_reg <= plaintext ^ rk0;   // initial AddRoundKey
+                state_reg <= plaintext ^ current_round_key;   // initial AddRoundKey
             else if (round_en)
                 state_reg <= round_out;         // main/final round
         end

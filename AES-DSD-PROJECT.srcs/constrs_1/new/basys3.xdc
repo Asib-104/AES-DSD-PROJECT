@@ -5,6 +5,9 @@ create_clock -add -name sys_clk_pin -period 10.00 -waveform {0 5} [get_ports clk
 ## Buttons (Center Button for reset)
 set_property -dict { PACKAGE_PIN U18  IOSTANDARD LVCMOS33 } [get_ports rst]
 
+## Switches
+set_property -dict { PACKAGE_PIN V17  IOSTANDARD LVCMOS33 } [get_ports decrypt_mode_switch]
+
 ## Status LEDs
 set_property -dict { PACKAGE_PIN U16  IOSTANDARD LVCMOS33 } [get_ports {led[0]}]
 set_property -dict { PACKAGE_PIN E19  IOSTANDARD LVCMOS33 } [get_ports {led[1]}]
