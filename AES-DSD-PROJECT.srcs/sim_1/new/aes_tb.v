@@ -143,7 +143,7 @@ module aes_tb;
         run_test(
             128'hffffffffffffffffffffffffffffffff,
             128'hffffffffffffffffffffffffffffffff,
-            128'ha8a2126696be49ebb1ad07e43b15e3c4,
+            128'hbcbf217cb280cf30b2517052193ab979,
             4
         );
 
