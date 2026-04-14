@@ -7,8 +7,8 @@ This diagram outlines the standard AES-128 encryption algorithm. It uses a 128-b
 
 ```mermaid
 graph TD
-    Plaintext[Plaintext (128-bit)] --> InitAR[AddRoundKey]
-    Key[Cipher Key (128-bit)] --> KEx[Key Expansion]
+    Plaintext["Plaintext (128-bit)"] --> InitAR[AddRoundKey]
+    Key["Cipher Key (128-bit)"] --> KEx[Key Expansion]
     KEx -->|Round Key 0| InitAR
     
     InitAR --> R1[Round 1]
@@ -21,7 +21,7 @@ graph TD
     end
     
     KEx -->|Round Keys 1 to 9| AR
-    AR --> R10[Round 10 (Final Round)]
+    AR --> R10["Round 10 (Final Round)"]
     
     subgraph "Final Round (Round 10)"
     R10 --> SubF[SubBytes]
@@ -30,7 +30,7 @@ graph TD
     end
     
     KEx -->|Round Key 10| AR_F
-    AR_F --> Ciphertext[Ciphertext (128-bit)]
+    AR_F --> Ciphertext["Ciphertext (128-bit)"]
 ```
 
 ## 2. AES-128 Decryption Block Diagram
@@ -38,8 +38,8 @@ The decryption process applies the inverse transformations. The round keys are a
 
 ```mermaid
 graph TD
-    Ciphertext[Ciphertext (128-bit)] --> InitAR_D[AddRoundKey]
-    Key[Cipher Key (128-bit)] --> KEx_D[Key Expansion]
+    Ciphertext["Ciphertext (128-bit)"] --> InitAR_D[AddRoundKey]
+    Key["Cipher Key (128-bit)"] --> KEx_D[Key Expansion]
     KEx_D -->|Round Key 10| InitAR_D
     
     InitAR_D --> R1_D[Round 1]
@@ -52,7 +52,7 @@ graph TD
     end
     
     KEx_D -->|Round Keys 9 down to 1| AR_D
-    InvMix --> R10_D[Round 10 (Final Inverse Round)]
+    InvMix --> R10_D["Round 10 (Final Inverse Round)"]
     
     subgraph "Final Inverse Round (Round 10)"
     R10_D --> InvShiftF[InvShiftRows]
@@ -61,7 +61,7 @@ graph TD
     end
     
     KEx_D -->|Round Key 0| AR_F_D
-    AR_F_D --> Plaintext[Plaintext (128-bit)]
+    AR_F_D --> Plaintext["Plaintext (128-bit)"]
 ```
 
 ## 3. AES Submodules Breakdown
@@ -132,18 +132,18 @@ graph TD
     end
     
     %% Communication paths
-    PC -->|Serial RX (Hex)| UART_RX
-    UART_RX -->|rx_data, rx_valid| MainFSM
+    PC -->|"Serial RX (Hex)"| UART_RX
+    UART_RX -->|"rx_data, rx_valid"| MainFSM
     
-    MainFSM -->|start, decrypt| CU
-    MainFSM -->|plaintext, cipher_key| StateReg
-    MainFSM -->|cipher_key| KEX_HW
+    MainFSM -->|"start, decrypt"| CU
+    MainFSM -->|"plaintext, cipher_key"| StateReg
+    MainFSM -->|"cipher_key"| KEX_HW
     
-    CU -->|done pulse| MainFSM
-    StateReg -->|ciphertext done| MainFSM
+    CU -->|"done pulse"| MainFSM
+    StateReg -->|"ciphertext done"| MainFSM
     
-    MainFSM -->|tx_start, byte| UART_TX
-    UART_TX -->|Serial TX (Hex)| PC
+    MainFSM -->|"tx_start, byte"| UART_TX
+    UART_TX -->|"Serial TX (Hex)"| PC
 ```
 
 ### Hardware Dataflow Summary
